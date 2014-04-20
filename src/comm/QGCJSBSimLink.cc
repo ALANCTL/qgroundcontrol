@@ -61,15 +61,6 @@ QGCJSBSimLink::~QGCJSBSimLink()
     }
 }
 
-/**
- * @brief Runs the thread
- *
- **/
-void QGCJSBSimLink::run()
-{
-    exec();
-}
-
 void QGCJSBSimLink::setPort(int port)
 {
     this->port = port;
@@ -382,7 +373,6 @@ bool QGCJSBSimLink::connectSimulation()
     }
     qDebug() << "STARTING SIM";
 
-    start(LowPriority);
     return connectState;
 }
 

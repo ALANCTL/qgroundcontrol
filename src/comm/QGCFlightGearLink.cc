@@ -66,15 +66,6 @@ QGCFlightGearLink::~QGCFlightGearLink()
     }
 }
 
-/**
- * @brief Runs the thread
- *
- **/
-void QGCFlightGearLink::run()
-{
-    exec();
-}
-
 void QGCFlightGearLink::setPort(int port)
 {
     this->port = port;
@@ -653,8 +644,6 @@ bool QGCFlightGearLink::connectSimulation()
 
 //    qDebug() << "STARTING: " << processFgfs << flightGearArguments;
 
-
-    start(LowPriority);
     return connectState;
 }
 

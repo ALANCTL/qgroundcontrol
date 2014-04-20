@@ -47,7 +47,6 @@ QGCXPlaneLink::QGCXPlaneLink(UASInterface* mav, QString remoteHost, QHostAddress
     remotePort(49000),
     socket(NULL),
     process(NULL),
-    terraSync(NULL),
     barometerOffsetkPa(15.0f),
     airframeID(QGCXPlaneLink::AIRFRAME_UNKNOWN),
     xPlaneConnected(false),
@@ -131,16 +130,6 @@ void QGCXPlaneLink::setVersion(unsigned int version)
     bool changed = (xPlaneVersion != version);
     xPlaneVersion = version;
     if (changed) emit versionChanged(QString("X-Plane %1").arg(xPlaneVersion));
-}
-
-
-/**
- * @brief Runs the thread
- *
- **/
-void QGCXPlaneLink::run()
-{
-    exec();
 }
 
 void QGCXPlaneLink::setPort(int localPort)
@@ -786,12 +775,6 @@ bool QGCXPlaneLink::disconnectSimulation()
         delete process;
         process = NULL;
     }
-    if (terraSync)
-    {
-        terraSync->close();
-        delete terraSync;
-        terraSync = NULL;
-    }
     if (socket)
     {
         socket->close();
@@ -938,8 +921,6 @@ bool QGCXPlaneLink::connectSimulation()
     qDebug() << "STARTING X-PLANE LINK, CONNECTING TO" << remoteHost << ":" << remotePort;
     // XXX Hack
     storeSettings();
-
-    start(LowPriority);
 
     if (!mav) return false;
     if (connectState) return false;

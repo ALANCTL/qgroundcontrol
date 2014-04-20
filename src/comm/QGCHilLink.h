@@ -5,7 +5,7 @@
 #include <QProcess>
 #include "inttypes.h"
 
-class QGCHilLink : public QThread
+class QGCHilLink : public QObject
 {
     Q_OBJECT
 public:
@@ -42,6 +42,21 @@ public:
      * @return true if sensor HIL is enabled
      */
     virtual bool sensorHilEnabled() = 0;
+
+    static QThread* putInWorkerThread(QGCHilLink* hil) {
+        QThread *thread = new QThread;
+
+        hil->moveToThread(thread);
+        connect(thread, SIGNAL(started()), hil, SLOT(connectSimulation()));
+//        connect(worker, SIGNAL(simulationDisconnected()), thread, SLOT(quit()));
+//        connect(worker, SIGNAL(simulationDisconnected()), worker, SLOT(deleteLater()));
+//        connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+        thread->start();
+
+        // Starts an event loop, and emits workerThread->started()
+        thread->start();
+        return thread;
+    }
 
 public slots:
     virtual void setPort(int port) = 0;

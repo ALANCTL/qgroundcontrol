@@ -3010,6 +3010,7 @@ void UAS::enableHilFlightGear(bool enable, QString options, bool sensorHil, QObj
             delete simulation;
         }
         simulation = new QGCFlightGearLink(this, options);
+        QGCHilLink::putInWorkerThread(simulation);
     }
     // Connect Flight Gear Link
     link = dynamic_cast<QGCFlightGearLink*>(simulation);
@@ -3039,6 +3040,7 @@ void UAS::enableHilJSBSim(bool enable, QString options)
             delete simulation;
         }
         simulation = new QGCJSBSimLink(this, options);
+        QGCHilLink::putInWorkerThread(simulation);
     }
     // Connect Flight Gear Link
     link = dynamic_cast<QGCJSBSimLink*>(simulation);
@@ -3066,6 +3068,7 @@ void UAS::enableHilXPlane(bool enable)
         }
         qDebug() << "CREATED NEW XPLANE LINK";
         simulation = new QGCXPlaneLink(this);
+        QGCHilLink::putInWorkerThread(simulation);
     }
     // Connect X-Plane Link
     if (enable)
